@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export function Home() {
 	const [tasks, setTasks] = useState([]);
 	const [task, setTask] = useState("");
+	const [count, setCount] = useState(0);
 
 	const addItem = e => {
 		setTask(e.target.value);
@@ -12,6 +13,11 @@ export function Home() {
 		const newTasks = tasks.filter((_, index) => index !== taskIndex);
 		setTasks(newTasks);
 	};
+
+	useEffect(() => {
+		const newCountItem = tasks.length;
+		setCount(newCountItem);
+	});
 
 	return (
 		<div className="card">
@@ -25,6 +31,7 @@ export function Home() {
 				<input
 					type="text"
 					name="input"
+					required
 					placeholder="What needs to be done?"
 					value={task}
 					onChange={evento => {
@@ -36,17 +43,16 @@ export function Home() {
 				return (
 					<ul key={index}>
 						{task}{" "}
-						<span
+						<button
 							onClick={() => {
 								deleteItem(index);
 							}}>
 							&nbsp;&#10007;&nbsp;
-						</span>
+						</button>
 					</ul>
 				);
 			})}
-
-			<div className="card-footer text-muted">item left</div>
+			<div className="card-footer text-muted">{count} item left</div>
 		</div>
 	);
 }
