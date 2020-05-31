@@ -1,24 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 export function Home() {
+	const [tasks, setTasks] = useState([]);
+	const [task, setTask] = useState("");
+
+	const addItem = e => {
+		setTask(e.target.value);
+	};
+
+	const deleteItem = taskIndex => {
+		const newTasks = tasks.filter((_, index) => index !== taskIndex);
+		setTasks(newTasks);
+	};
+
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="card">
+			<div className="card-header">To Do List</div>
+			<form
+				onSubmit={evento => {
+					setTasks(tasks.concat(task));
+					evento.preventDefault();
+					setTask("");
+				}}>
+				<input
+					type="text"
+					name="input"
+					placeholder="What needs to be done?"
+					value={task}
+					onChange={evento => {
+						addItem(evento);
+					}}
+				/>
+			</form>
+			{tasks.map((task, index) => {
+				return (
+					<ul key={index}>
+						{task}{" "}
+						<span
+							onClick={() => {
+								deleteItem(index);
+							}}>
+							&nbsp;&#10007;&nbsp;
+						</span>
+					</ul>
+				);
+			})}
+
+			<div className="card-footer text-muted">item left</div>
 		</div>
 	);
 }
