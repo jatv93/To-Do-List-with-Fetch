@@ -3,7 +3,34 @@ import React, { useState, useEffect } from "react";
 export function Home() {
 	const [tasks, setTasks] = useState([]);
 	const [task, setTask] = useState("");
-	const [count, setCount] = useState(0);
+	const [count, setCount] = useState(tasks.length);
+
+	useEffect(() => {
+		getTasks(
+			"https://assets.breatheco.de/apis/fake/todos/user/alesanchezr"
+		);
+	}, []);
+
+	const getTasks = url => {
+		fetch(url, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				console.log(resp.ok);
+				console.log(resp.status);
+				return resp.json();
+			})
+			.then(data => {
+				setTasks([]);
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
 
 	const addItem = e => {
 		setTask(e.target.value);
@@ -14,11 +41,6 @@ export function Home() {
 		setTasks(newTasks);
 	};
 
-	useEffect(() => {
-		const newCountItem = tasks.length;
-		setCount(newCountItem);
-	});
-
 	return (
 		<div className="card">
 			<div className="card-header">To Do List</div>
@@ -27,6 +49,7 @@ export function Home() {
 					setTasks(tasks.concat(task));
 					evento.preventDefault();
 					setTask("");
+					setCount(count + 1);
 				}}>
 				<input
 					type="text"
@@ -46,6 +69,7 @@ export function Home() {
 						<button
 							onClick={() => {
 								deleteItem(index);
+								setCount(count - 1);
 							}}>
 							&nbsp;&#10007;&nbsp;
 						</button>
