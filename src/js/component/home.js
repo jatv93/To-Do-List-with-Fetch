@@ -6,9 +6,7 @@ export function Home() {
 	const [count, setCount] = useState(tasks.length);
 
 	useEffect(() => {
-		getTasks(
-			"https://assets.breatheco.de/apis/fake/todos/user/alesanchezr"
-		);
+		getTasks("https://assets.breatheco.de/apis/fake/todos/user/jatv93");
 	}, []);
 
 	const getTasks = url => {
@@ -32,13 +30,77 @@ export function Home() {
 			});
 	};
 
+	fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
+		method: "POST",
+		body: JSON.stringify([]),
+		headers: {
+			"Content-Type": "application/json"
+		}
+	})
+		.then(resp => {
+			console.log(resp.ok);
+			console.log(resp.status);
+			return resp.json();
+		})
+		.then(data => {
+			console.log(data);
+		})
+		.catch(error => {
+			console.log(error);
+		});
+
 	const addItem = e => {
 		setTask(e.target.value);
+
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
+			method: "PUT",
+			body: JSON.stringify(tasks),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				console.log(resp.ok);
+				console.log(resp.status);
+				return resp.json();
+			})
+			.then(data => {
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	};
 
 	const deleteItem = taskIndex => {
 		const newTasks = tasks.filter((_, index) => index !== taskIndex);
 		setTasks(newTasks);
+	};
+
+	const deleteAllItem = () => {
+		const deleteTasks = [];
+		setTasks(deleteTasks);
+		alert("Do you want to delete all tasks?");
+
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
+			method: "DELETE",
+			body: JSON.stringify(),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				console.log(resp.ok);
+				console.log(resp.status);
+				return resp.json();
+			})
+			.then(data => {
+				setTasks([]);
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	};
 
 	return (
@@ -67,6 +129,7 @@ export function Home() {
 					<ul key={index}>
 						{task}{" "}
 						<button
+							className="delete-button"
 							onClick={() => {
 								deleteItem(index);
 								setCount(count - 1);
@@ -76,7 +139,17 @@ export function Home() {
 					</ul>
 				);
 			})}
-			<div className="card-footer text-muted">{count} item left</div>
+			<div className="card-footer text-muted">
+				{count} item left
+				<button
+					className="deleteAll"
+					onClick={() => {
+						deleteAllItem();
+						setCount(0);
+					}}>
+					Delete All &nbsp;&#10007;&nbsp;
+				</button>
+			</div>
 		</div>
 	);
 }
