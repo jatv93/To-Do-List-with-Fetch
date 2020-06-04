@@ -75,16 +75,34 @@ export function Home() {
 	const deleteItem = taskIndex => {
 		const newTasks = tasks.filter((_, index) => index !== taskIndex);
 		setTasks(newTasks);
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
+			method: "PUT",
+			body: JSON.stringify(tasks),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				console.log(resp.ok);
+				console.log(resp.status);
+				return resp.json();
+			})
+			.then(data => {
+				setTasks([]);
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	};
 
 	const deleteAllItem = () => {
 		const deleteTasks = [];
 		setTasks(deleteTasks);
 		alert("Do you want to delete all tasks?");
-
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
-			method: "DELETE",
-			body: JSON.stringify(),
+			method: "PUT",
+			body: JSON.stringify(tasks),
 			headers: {
 				"Content-Type": "application/json"
 			}
