@@ -22,39 +22,27 @@ export function Home() {
 				return resp.json();
 			})
 			.then(data => {
-				setTasks([]);
 				console.log(data);
+				let html = data.map(t => t.label);
+				console.log(html);
+				setTasks(html);
+				setCount(data.length);
 			})
 			.catch(error => {
 				console.log(error);
 			});
 	};
 
-	fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
-		method: "POST",
-		body: JSON.stringify([]),
-		headers: {
-			"Content-Type": "application/json"
-		}
-	})
-		.then(resp => {
-			console.log(resp.ok);
-			console.log(resp.status);
-			return resp.json();
-		})
-		.then(data => {
-			console.log(data);
-		})
-		.catch(error => {
-			console.log(error);
-		});
-
 	const addItem = e => {
 		setTask(e.target.value);
 
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
 			method: "PUT",
-			body: JSON.stringify(tasks),
+			body: JSON.stringify(
+				tasks.map(item => {
+					return { label: item, done: false };
+				})
+			),
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -77,7 +65,11 @@ export function Home() {
 		setTasks(newTasks);
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
 			method: "PUT",
-			body: JSON.stringify(tasks),
+			body: JSON.stringify(
+				tasks.map(item => {
+					return { label: item, done: false };
+				})
+			),
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -88,7 +80,6 @@ export function Home() {
 				return resp.json();
 			})
 			.then(data => {
-				setTasks([]);
 				console.log(data);
 			})
 			.catch(error => {
@@ -101,8 +92,8 @@ export function Home() {
 		setTasks(deleteTasks);
 		alert("Do you want to delete all tasks?");
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/jatv93", {
-			method: "PUT",
-			body: JSON.stringify(tasks),
+			method: "DELETE",
+			body: JSON.stringify(),
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -113,8 +104,8 @@ export function Home() {
 				return resp.json();
 			})
 			.then(data => {
-				setTasks([]);
 				console.log(data);
+				setTasks([]);
 			})
 			.catch(error => {
 				console.log(error);
